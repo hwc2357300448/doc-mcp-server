@@ -211,8 +211,9 @@ def _find_best_match(heading_text: str, text_lines: List[str], used_indices: set
     best_idx = -1
 
     for idx, line in enumerate(text_lines):
-        if idx in used_indices:
-            continue
+        # 不跳过已使用的索引，因为可能有多个标题匹配同一行
+        # if idx in used_indices:
+        #     continue
 
         # 计算匹配分数
         score = _calculate_match_score(heading_text, line)
@@ -223,7 +224,7 @@ def _find_best_match(heading_text: str, text_lines: List[str], used_indices: set
             best_idx = idx
 
     # 如果找到了好的匹配，标记为已使用
-    if best_idx >= 0 and best_score > 0.5:
+    if best_idx >= 0 and best_score > 0.3:
         used_indices.add(best_idx)
 
     return best_match
@@ -244,14 +245,23 @@ def _calculate_match_score(heading_text: str, line: str) -> float:
     if heading_text not in line:
         return 0
 
-    # 检查行是否以数字或编号开头（表示有自动编号）
-    has_numbering = bool(re.match(r'^[\d一二三四五六七八九十]+[\.、\s]', line))
+    # 检查多种编号格式
+    # 1. 数字编号：1. 1.1. 1.1.1. 等
+    # 2. 中文编号：一、二、三、等
+    # 3. 括号编号：(1) （1） [1] 等
+    numbering_patterns = [
+        r'^[\d]+\.[\d]*\.?[\d]*\.?\s*',  # 1. 1.1. 1.1.1.
+        r'^[一二三四五六七八九十百千]+[、\.]\s*',  # 一、二、
+        r'^[\(（\[][\d]+[\)）\]]\s*',  # (1) （1） [1]
+        r'^\d+\s+',  # 纯数字后跟空格
+    ]
+
+    has_numbering = any(re.match(pattern, line) for pattern in numbering_patterns)
 
     # 如果有编号，给予更高的优先级
     if has_numbering:
-        # 基础分数 + 编号加成
         base_score = len(heading_text) / len(line) if len(line) > 0 else 0
-        return base_score + 0.5  # 加成0.5，确保带编号的行优先
+        return base_score + 0.5
 
     # 如果是完全匹配（没有编号），给予较低分数
     if line == heading_text:
