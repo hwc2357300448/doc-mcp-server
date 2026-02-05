@@ -312,6 +312,41 @@ insert_interface_doc(
 )
 ```
 
+### 示例5：获取文档目录结构
+
+```python
+# 获取文档中所有标题的列表（包含完整的自动编号）
+get_headings_list(
+    filename="report.docx"
+)
+
+# 返回结果示例：
+# {
+#     "success": True,
+#     "count": 10,
+#     "headings": [
+#         {
+#             "level": 1,
+#             "text": "1.引言",
+#             "paragraph_index": 0,
+#             "style": "Heading 1"
+#         },
+#         {
+#             "level": 2,
+#             "text": "1.1.项目背景",
+#             "paragraph_index": 2,
+#             "style": "Heading 2"
+#         },
+#         {
+#             "level": 3,
+#             "text": "1.1.1.业务需求",
+#             "paragraph_index": 5,
+#             "style": "Heading 3"
+#         }
+#     ]
+# }
+```
+
 ## 🛠️ 可用工具列表
 
 ### 文档基础操作
@@ -381,7 +416,7 @@ insert_interface_doc(
 |---------|------|---------|
 | `add_footnote` | 添加脚注 | filename, paragraph_index, footnote_text |
 | `get_document_outline` | 获取文档大纲结构 | filename |
-| `get_headings_list` | 获取文档中所有标题的简单列表 | filename |
+| `get_headings_list` | 获取文档中所有标题的详细列表（包含完整的自动编号） | filename |
 | `add_header` | 添加页眉 | filename, text |
 | `add_footer` | 添加页脚 | filename, text |
 | `insert_interface_doc` | 插入标准格式的接口文档 | filename, position, name, path, description |

@@ -8,7 +8,17 @@
 ## [Unreleased]
 
 ### 新增
-- ✅ `get_headings_list` 工具 - 获取文档中所有标题的简单列表
+- ✅ `get_headings_list` 工具 - 获取文档中所有标题的详细列表（包含完整的自动编号）
+  - 支持提取多级编号（如 1.、1.1.、4.1.2.3. 等）
+  - 通过解析 Word 文档的 XML 结构和 numbering.xml 来获取真实的编号信息
+  - 支持段落级别和样式级别的编号定义
+  - 正确处理多个编号实例共享同一抽象编号定义的情况
+
+### 技术改进
+- 🔧 添加 lxml 依赖用于 XML 解析
+- 🔧 实现完整的 Word 编号系统解析（abstractNum、numId、ilvl）
+- 🔧 支持多种编号格式（decimal、lowerLetter、upperLetter、lowerRoman、upperRoman、chineseCounting）
+- 🔧 按 abstractNumId 管理编号计数器，确保编号连续性
 
 ## [1.0.0] - 2024-02-05
 
