@@ -1,5 +1,6 @@
 """高级功能工具 - 脚注、尾注等"""
 import os
+import docx2txt
 from typing import Optional, Dict, Any
 from ..utils import DocumentManager, validate_file_path, handle_docx_errors
 
@@ -136,21 +137,56 @@ async def add_footer(
 @handle_docx_errors
 async def get_headings_list(filename: str) -> Dict[str, Any]:
     """
-    获取文档中所有标题的简单列表
+    获取文档中所有标题的详细列表（包含自动编号）
 
     参数:
         filename: 文档路径
 
     返回:
-        包含所有标题文本的列表
+        包含所有标题的详细信息列表，包括层级、标题名称（含编号）、所在段落索引
     """
     abs_path = validate_file_path(filename)
+
+    # 使用 docx2txt 提取完整文本（包含自动编号）
+    full_text_content = docx2txt.process(abs_path)
+    text_lines = [line.strip() for line in full_text_content.split('\n') if line.strip()]
+
+    # 使用 python-docx 获取段落样式信息
     doc = doc_manager.get_or_open(abs_path, reload=True)
 
     headings = []
-    for para in doc.paragraphs:
+    text_line_index = 0
+
+    for i, para in enumerate(doc.paragraphs):
         if para.style.name.startswith('Heading'):
-            headings.append(para.text)
+            try:
+                # 提取标题级别
+                level = int(para.style.name.split()[-1])
+
+                # 从 docx2txt 提取的文本中查找对应的标题文本（包含编号）
+                heading_text = para.text
+                full_heading_text = heading_text
+
+                # 在提取的文本行中查找匹配的标题
+                for line in text_lines[text_line_index:]:
+                    if heading_text in line or line in heading_text:
+                        full_heading_text = line
+                        break
+
+                headings.append({
+                    "level": level,
+                    "text": full_heading_text,
+                    "paragraph_index": i,
+                    "style": para.style.name
+                })
+            except (ValueError, IndexError):
+                # 如果无法解析级别，仍然添加标题
+                headings.append({
+                    "level": 0,
+                    "text": para.text,
+                    "paragraph_index": i,
+                    "style": para.style.name
+                })
 
     return {
         "success": True,
