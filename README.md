@@ -489,8 +489,8 @@ A: 可以直接运行 `python -m src.server` 查看日志输出。
 ## 📮 联系方式
 
 如有问题或建议，请：
-- 提交 [Issue](https://github.com/yourusername/doc-mcp-server/issues)
-- 发起 [Discussion](https://github.com/yourusername/doc-mcp-server/discussions)
+- 提交 [Issue](https://github.com/hwc2357300448/doc-mcp-server/issues)
+- 发起 [Discussion](https://github.com/hwc2357300448/doc-mcp-server/discussions)
 
 ## 🙏 致谢
 

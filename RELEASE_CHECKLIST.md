@@ -99,7 +99,7 @@ git commit -m "feat: 初始版本 v1.0.0"
 ### 3. 推送到 GitHub
 
 ```bash
-git remote add origin https://github.com/yourusername/doc-mcp-server.git
+git remote add origin https://github.com/hwc2357300448/doc-mcp-server.git
 git branch -M main
 git push -u origin main
 ```

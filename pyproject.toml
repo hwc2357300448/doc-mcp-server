@@ -27,10 +27,10 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/yourusername/doc-mcp-server"
-Repository = "https://github.com/yourusername/doc-mcp-server"
-Issues = "https://github.com/yourusername/doc-mcp-server/issues"
-Changelog = "https://github.com/yourusername/doc-mcp-server/blob/main/CHANGELOG.md"
+Homepage = "https://github.com/hwc2357300448/doc-mcp-server"
+Repository = "https://github.com/hwc2357300448/doc-mcp-server"
+Issues = "https://github.com/hwc2357300448/doc-mcp-server/issues"
+Changelog = "https://github.com/hwc2357300448/doc-mcp-server/blob/main/CHANGELOG.md"
 
 [project.optional-dependencies]
 dev = [

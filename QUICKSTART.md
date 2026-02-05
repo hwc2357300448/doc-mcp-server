@@ -7,7 +7,7 @@
 ### 1. 克隆仓库
 
 ```bash
-git clone https://github.com/yourusername/doc-mcp-server.git
+git clone https://github.com/hwc2357300448/doc-mcp-server.git
 cd doc-mcp-server
 ```
 
@@ -144,4 +144,4 @@ pip install -r requirements.txt
 3. 使用接口文档生成功能
 4. 查看 [示例](README.md#-使用示例) 了解更多用法
 
-祝你使用愉快！如有问题，欢迎提交 [Issue](https://github.com/yourusername/doc-mcp-server/issues)。
+祝你使用愉快！如有问题，欢迎提交 [Issue](https://github.com/hwc2357300448/doc-mcp-server/issues)。

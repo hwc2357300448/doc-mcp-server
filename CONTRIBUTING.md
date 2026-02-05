@@ -27,7 +27,7 @@
 
 1. **Fork 仓库**
    ```bash
-   git clone https://github.com/yourusername/doc-mcp-server.git
+   git clone https://github.com/hwc2357300448/doc-mcp-server.git
    cd doc-mcp-server
    ```
 
