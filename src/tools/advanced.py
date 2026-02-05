@@ -131,3 +131,29 @@ async def add_footer(
         "message": "页脚添加成功",
         "text": text
     }
+
+
+@handle_docx_errors
+async def get_headings_list(filename: str) -> Dict[str, Any]:
+    """
+    获取文档中所有标题的简单列表
+
+    参数:
+        filename: 文档路径
+
+    返回:
+        包含所有标题文本的列表
+    """
+    abs_path = validate_file_path(filename)
+    doc = doc_manager.get_or_open(abs_path, reload=True)
+
+    headings = []
+    for para in doc.paragraphs:
+        if para.style.name.startswith('Heading'):
+            headings.append(para.text)
+
+    return {
+        "success": True,
+        "count": len(headings),
+        "headings": headings
+    }

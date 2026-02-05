@@ -579,6 +579,17 @@ async def list_tools() -> list[Tool]:
                 "required": ["filename", "text"]
             }
         ),
+        Tool(
+            name="get_headings_list",
+            description="获取文档中所有标题的简单列表",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "filename": {"type": "string", "description": "文档路径"}
+                },
+                "required": ["filename"]
+            }
+        ),
         # 数据读取工具
         Tool(
             name="get_paragraph_text",
@@ -776,6 +787,8 @@ async def call_tool(name: str, arguments: dict) -> list[TextContent]:
             result = await advanced.add_header(**arguments)
         elif name == "add_footer":
             result = await advanced.add_footer(**arguments)
+        elif name == "get_headings_list":
+            result = await advanced.get_headings_list(**arguments)
         # 数据读取功能
         elif name == "get_paragraph_text":
             result = await document_basic.get_paragraph_text(**arguments)

@@ -5,6 +5,11 @@
 格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/)，
 版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [Unreleased]
+
+### 新增
+- ✅ `get_headings_list` 工具 - 获取文档中所有标题的简单列表
+
 ## [1.0.0] - 2024-02-05
 
 ### 新增

@@ -65,6 +65,7 @@
 ### 高级功能
 - ✅ 添加脚注
 - ✅ 获取文档大纲结构
+- ✅ 获取标题列表
 - ✅ 添加页眉
 - ✅ 添加页脚
 - ✅ 生成标准格式的接口文档
@@ -380,6 +381,7 @@ insert_interface_doc(
 |---------|------|---------|
 | `add_footnote` | 添加脚注 | filename, paragraph_index, footnote_text |
 | `get_document_outline` | 获取文档大纲结构 | filename |
+| `get_headings_list` | 获取文档中所有标题的简单列表 | filename |
 | `add_header` | 添加页眉 | filename, text |
 | `add_footer` | 添加页脚 | filename, text |
 | `insert_interface_doc` | 插入标准格式的接口文档 | filename, position, name, path, description |
