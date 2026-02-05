@@ -505,10 +505,23 @@ async def list_tools() -> list[Tool]:
                 "properties": {
                     "filename": {"type": "string", "description": "文档路径"},
                     "image_path": {"type": "string", "description": "图片文件路径"},
+                    "position": {"type": "integer", "description": "插入位置（段落索引，从0开始），不指定则追加到文档末尾"},
                     "width": {"type": "number", "description": "图片宽度（英寸，可选）"},
                     "height": {"type": "number", "description": "图片高度（英寸，可选）"}
                 },
                 "required": ["filename", "image_path"]
+            }
+        ),
+        Tool(
+            name="delete_image",
+            description="删除指定段落中的图片",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "filename": {"type": "string", "description": "文档路径"},
+                    "paragraph_index": {"type": "integer", "description": "包含图片的段落索引（从0开始）"}
+                },
+                "required": ["filename", "paragraph_index"]
             }
         ),
         # 列表操作工具
@@ -805,6 +818,8 @@ async def call_tool(name: str, arguments: dict) -> list[TextContent]:
         # 图片操作
         elif name == "insert_image":
             result = await image_ops.insert_image(**arguments)
+        elif name == "delete_image":
+            result = await image_ops.delete_image(**arguments)
         # 列表操作
         elif name == "add_bullet_list":
             result = await list_ops.add_bullet_list(**arguments)

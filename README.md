@@ -56,7 +56,8 @@
 - ✅ 添加有序列表
 
 ### 图片操作
-- ✅ 插入图片（支持设置宽高）
+- ✅ 插入图片（支持设置宽高、指定位置）
+- ✅ 删除图片
 
 ### 样式格式
 - ✅ 插入分页符
@@ -439,7 +440,8 @@ get_headings_list_range(
 
 | 工具名称 | 描述 | 必需参数 |
 |---------|------|---------|
-| `insert_image` | 插入图片 | filename, image_path |
+| `insert_image` | 插入图片（支持指定位置） | filename, image_path |
+| `delete_image` | 删除指定段落中的图片 | filename, paragraph_index |
 
 ### 样式格式
 

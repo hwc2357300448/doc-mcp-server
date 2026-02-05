@@ -18,6 +18,16 @@
   - 支持按标题级别筛选（max_level）
   - 支持组合筛选条件
   - 返回筛选信息和原始标题总数
+- ✅ `delete_image` 工具 - 删除指定段落中的图片
+  - 通过段落索引定位并删除图片
+
+### 改进
+- 🔧 `insert_image` 工具增强
+  - 新增 `position` 参数，支持在指定位置插入图片
+  - 不指定位置时默认追加到文档末尾
+- 🔧 补充 MCP 工具 schema 中缺失的参数定义
+  - 多个工具添加缩进参数（first_line_indent、left_indent、right_indent）
+  - 多个工具添加格式化参数（highlight、alignment、color 等）
 
 ### 技术改进
 - 🔧 添加 lxml 依赖用于 XML 解析
