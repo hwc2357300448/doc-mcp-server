@@ -347,6 +347,44 @@ get_headings_list(
 # }
 ```
 
+### 示例6：获取特定范围的目录结构
+
+```python
+# 获取段落索引 50-100 范围内的标题
+get_headings_list_range(
+    filename="report.docx",
+    start_index=50,
+    end_index=100
+)
+
+# 只获取 1-2 级标题（一级和二级标题）
+get_headings_list_range(
+    filename="report.docx",
+    max_level=2
+)
+
+# 组合条件：段落索引 100-200 且只要 1-3 级标题
+get_headings_list_range(
+    filename="report.docx",
+    start_index=100,
+    end_index=200,
+    max_level=3
+)
+
+# 返回结果示例：
+# {
+#     "success": True,
+#     "count": 6,
+#     "headings": [...],
+#     "filter_info": {
+#         "start_index": 100,
+#         "end_index": 200,
+#         "max_level": 3,
+#         "total_headings": 200
+#     }
+# }
+```
+
 ## 🛠️ 可用工具列表
 
 ### 文档基础操作
@@ -417,6 +455,7 @@ get_headings_list(
 | `add_footnote` | 添加脚注 | filename, paragraph_index, footnote_text |
 | `get_document_outline` | 获取文档大纲结构 | filename |
 | `get_headings_list` | 获取文档中所有标题的详细列表（包含完整的自动编号） | filename |
+| `get_headings_list_range` | 获取特定范围内的标题列表（支持按段落索引和标题级别筛选） | filename |
 | `add_header` | 添加页眉 | filename, text |
 | `add_footer` | 添加页脚 | filename, text |
 | `insert_interface_doc` | 插入标准格式的接口文档 | filename, position, name, path, description |

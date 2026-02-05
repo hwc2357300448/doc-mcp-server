@@ -590,6 +590,20 @@ async def list_tools() -> list[Tool]:
                 "required": ["filename"]
             }
         ),
+        Tool(
+            name="get_headings_list_range",
+            description="获取文档中特定范围内的标题列表（包含自动编号）",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "filename": {"type": "string", "description": "文档路径"},
+                    "start_index": {"type": "integer", "description": "起始段落索引（包含），不指定则从文档开头"},
+                    "end_index": {"type": "integer", "description": "结束段落索引（包含），不指定则到文档末尾"},
+                    "max_level": {"type": "integer", "description": "最大标题级别（1-9），不指定则返回所有级别"}
+                },
+                "required": ["filename"]
+            }
+        ),
         # 数据读取工具
         Tool(
             name="get_paragraph_text",
@@ -789,6 +803,8 @@ async def call_tool(name: str, arguments: dict) -> list[TextContent]:
             result = await advanced.add_footer(**arguments)
         elif name == "get_headings_list":
             result = await advanced.get_headings_list(**arguments)
+        elif name == "get_headings_list_range":
+            result = await advanced.get_headings_list_range(**arguments)
         # 数据读取功能
         elif name == "get_paragraph_text":
             result = await document_basic.get_paragraph_text(**arguments)

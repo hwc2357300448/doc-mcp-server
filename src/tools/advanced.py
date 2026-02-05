@@ -226,6 +226,60 @@ async def get_headings_list(filename: str) -> Dict[str, Any]:
     }
 
 
+@handle_docx_errors
+async def get_headings_list_range(
+    filename: str,
+    start_index: Optional[int] = None,
+    end_index: Optional[int] = None,
+    max_level: Optional[int] = None
+) -> Dict[str, Any]:
+    """
+    获取文档中特定范围内的标题列表（包含自动编号）
+
+    参数:
+        filename: 文档路径
+        start_index: 起始段落索引（包含），None 表示从文档开头
+        end_index: 结束段落索引（包含），None 表示到文档末尾
+        max_level: 最大标题级别（1-9），None 表示返回所有级别
+
+    返回:
+        包含筛选后标题的详细信息列表
+    """
+    # 先获取所有标题
+    all_headings_result = await get_headings_list(filename)
+
+    if not all_headings_result['success']:
+        return all_headings_result
+
+    all_headings = all_headings_result['headings']
+    filtered_headings = []
+
+    for heading in all_headings:
+        # 筛选条件1：段落索引范围
+        if start_index is not None and heading['paragraph_index'] < start_index:
+            continue
+        if end_index is not None and heading['paragraph_index'] > end_index:
+            continue
+
+        # 筛选条件2：标题级别
+        if max_level is not None and heading['level'] > max_level:
+            continue
+
+        filtered_headings.append(heading)
+
+    return {
+        "success": True,
+        "count": len(filtered_headings),
+        "headings": filtered_headings,
+        "filter_info": {
+            "start_index": start_index,
+            "end_index": end_index,
+            "max_level": max_level,
+            "total_headings": len(all_headings)
+        }
+    }
+
+
 def _get_paragraph_numbering(para) -> Optional[Dict[str, int]]:
     """
     获取段落的编号信息（优先从段落属性获取，其次从样式获取）
