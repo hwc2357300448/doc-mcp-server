@@ -22,7 +22,11 @@ async def insert_image(
     参数:
         filename: 文档路径
         image_path: 图片文件路径
-        position: 插入位置（段落索引，从0开始），None表示追加到文档末尾
+        position: 插入位置（段落索引，从0开始）
+                 新图片将插入到指定索引之后
+                 例如：position=0 表示插入到索引0之后，新图片所在段落成为索引1
+                      position=5 表示插入到索引5之后，新图片所在段落成为索引6
+                 None表示追加到文档末尾
         width: 图片宽度（英寸，可选）
         height: 图片高度（英寸，可选）
     """
@@ -32,18 +36,18 @@ async def insert_image(
     if not os.path.exists(image_path):
         raise FileNotFoundError(f"图片文件不存在: {image_path}")
 
-    # 如果指定了位置，在指定位置插入
+    # 如果指定了位置，在指定索引之后插入
     if position is not None:
-        if position < 0 or position > len(doc.paragraphs):
-            raise ValueError(f"位置索引超出范围: {position}")
+        if position < 0 or position >= len(doc.paragraphs):
+            raise ValueError(f"位置索引超出范围: {position}，有效范围: 0-{len(doc.paragraphs)-1}")
 
-        # 在指定位置插入一个新段落
-        if position == 0:
-            para = doc.paragraphs[0].insert_paragraph_before()
-        elif position >= len(doc.paragraphs):
+        # 在指定索引之后插入一个新段落
+        if position + 1 >= len(doc.paragraphs):
+            # 如果 position 是最后一个段落，则追加到末尾
             para = doc.add_paragraph()
         else:
-            para = doc.paragraphs[position].insert_paragraph_before()
+            # 在 position+1 的位置之前插入（即在 position 之后）
+            para = doc.paragraphs[position + 1].insert_paragraph_before()
 
         # 在新段落中插入图片
         run = para.add_run()

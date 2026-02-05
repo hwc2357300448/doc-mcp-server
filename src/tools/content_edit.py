@@ -354,7 +354,10 @@ async def insert_paragraph(
     参数:
         filename: 文档路径
         text: 段落文本内容
-        position: 插入位置索引（从0开始，0表示插入到开头）
+        position: 插入位置索引（从0开始）
+                 新段落将插入到指定索引之后
+                 例如：position=0 表示插入到索引0之后，新段落成为索引1
+                      position=5 表示插入到索引5之后，新段落成为索引6
         style: 段落样式名称（可选）
         font_name: 字体名称（可选）
         font_size: 字号（可选）
@@ -370,18 +373,18 @@ async def insert_paragraph(
     abs_path = validate_file_path(filename)
     doc = doc_manager.get_or_open(abs_path)
 
-    if position < 0 or position > len(doc.paragraphs):
-        raise ValueError(f"插入位置超出范围: {position}，有效范围: 0-{len(doc.paragraphs)}")
+    if position < 0 or position >= len(doc.paragraphs):
+        raise ValueError(f"插入位置超出范围: {position}，有效范围: 0-{len(doc.paragraphs)-1}")
 
-    # 在指定位置插入段落
-    if position == len(doc.paragraphs):
-        # 在末尾插入
+    # 在指定索引之后插入段落
+    # 获取 position+1 位置的段落，在其之前插入（即在 position 之后）
+    if position + 1 >= len(doc.paragraphs):
+        # 如果 position 是最后一个段落，则追加到末尾
         para = doc.add_paragraph(text, style=style)
     else:
-        # 在中间位置插入
-        target_para = doc.paragraphs[position]
-        new_para = target_para.insert_paragraph_before(text, style=style)
-        para = new_para
+        # 在 position+1 的位置之前插入（即在 position 之后）
+        target_para = doc.paragraphs[position + 1]
+        para = target_para.insert_paragraph_before(text, style=style)
 
     # 设置字体格式
     if any([font_name, font_size, bold, italic, color, highlight]):

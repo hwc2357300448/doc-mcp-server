@@ -169,13 +169,13 @@ async def list_tools() -> list[Tool]:
         ),
         Tool(
             name="insert_paragraph",
-            description="在指定位置插入段落",
+            description="在指定位置插入段落（在指定索引之后插入）",
             inputSchema={
                 "type": "object",
                 "properties": {
                     "filename": {"type": "string", "description": "文档路径"},
                     "text": {"type": "string", "description": "段落文本内容"},
-                    "position": {"type": "integer", "description": "插入位置索引（从0开始，0表示插入到开头）"},
+                    "position": {"type": "integer", "description": "插入位置索引（从0开始）。新段落将插入到指定索引之后。例如：position=0表示插入到索引0之后，新段落成为索引1"},
                     "style": {"type": "string", "description": "段落样式名称（可选）"},
                     "font_name": {"type": "string", "description": "字体名称（可选）"},
                     "font_size": {"type": "integer", "description": "字号（可选）"},
@@ -499,13 +499,13 @@ async def list_tools() -> list[Tool]:
         # 图片操作工具
         Tool(
             name="insert_image",
-            description="插入图片到Word文档",
+            description="插入图片到Word文档（在指定索引之后插入）",
             inputSchema={
                 "type": "object",
                 "properties": {
                     "filename": {"type": "string", "description": "文档路径"},
                     "image_path": {"type": "string", "description": "图片文件路径"},
-                    "position": {"type": "integer", "description": "插入位置（段落索引，从0开始），不指定则追加到文档末尾"},
+                    "position": {"type": "integer", "description": "插入位置（段落索引，从0开始）。新图片将插入到指定索引之后。例如：position=0表示插入到索引0之后。不指定则追加到文档末尾"},
                     "width": {"type": "number", "description": "图片宽度（英寸，可选）"},
                     "height": {"type": "number", "description": "图片高度（英寸，可选）"}
                 },
