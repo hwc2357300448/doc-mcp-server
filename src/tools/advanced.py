@@ -149,34 +149,40 @@ async def get_headings_list(filename: str) -> Dict[str, Any]:
 
     # 使用 docx2txt 提取完整文本（包含自动编号）
     full_text_content = docx2txt.process(abs_path)
-    text_lines = [line.strip() for line in full_text_content.split('\n') if line.strip()]
+    all_text_lines = full_text_content.split('\n')
 
     # 使用 python-docx 获取段落样式信息
     doc = doc_manager.get_or_open(abs_path, reload=True)
 
     headings = []
-    text_line_index = 0
+    docx2txt_line_idx = 0
 
-    for i, para in enumerate(doc.paragraphs):
+    for para_idx, para in enumerate(doc.paragraphs):
         if para.style.name.startswith('Heading'):
             try:
                 # 提取标题级别
                 level = int(para.style.name.split()[-1])
+                heading_text = para.text.strip()
 
-                # 从 docx2txt 提取的文本中查找对应的标题文本（包含编号）
-                heading_text = para.text
+                # 在 docx2txt 提取的文本中查找包含此标题的行
                 full_heading_text = heading_text
 
-                # 在提取的文本行中查找匹配的标题
-                for line in text_lines[text_line_index:]:
-                    if heading_text in line or line in heading_text:
+                # 从当前位置开始查找
+                for idx in range(docx2txt_line_idx, len(all_text_lines)):
+                    line = all_text_lines[idx].strip()
+                    if not line:
+                        continue
+
+                    # 如果这行包含标题文本，说明找到了
+                    if heading_text and heading_text in line:
                         full_heading_text = line
+                        docx2txt_line_idx = idx + 1
                         break
 
                 headings.append({
                     "level": level,
                     "text": full_heading_text,
-                    "paragraph_index": i,
+                    "paragraph_index": para_idx,
                     "style": para.style.name
                 })
             except (ValueError, IndexError):
@@ -184,7 +190,7 @@ async def get_headings_list(filename: str) -> Dict[str, Any]:
                 headings.append({
                     "level": 0,
                     "text": para.text,
-                    "paragraph_index": i,
+                    "paragraph_index": para_idx,
                     "style": para.style.name
                 })
 
