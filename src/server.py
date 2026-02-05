@@ -89,7 +89,12 @@ async def list_tools() -> list[Tool]:
                     "font_size": {"type": "integer", "description": "字号（可选）"},
                     "bold": {"type": "boolean", "description": "是否粗体"},
                     "italic": {"type": "boolean", "description": "是否斜体"},
-                    "color": {"type": "string", "description": "文字颜色（可选）"}
+                    "color": {"type": "string", "description": "文字颜色，十六进制RGB（可选）"},
+                    "highlight": {"type": "string", "description": "背景色（高亮），十六进制RGB（可选）"},
+                    "first_line_indent": {"type": "number", "description": "首行缩进，单位厘米（可选）"},
+                    "left_indent": {"type": "number", "description": "左缩进，单位厘米（可选）"},
+                    "right_indent": {"type": "number", "description": "右缩进，单位厘米（可选）"},
+                    "alignment": {"type": "string", "description": "对齐方式：left/center/right/justify（可选）"}
                 },
                 "required": ["filename", "text"]
             }
@@ -106,7 +111,13 @@ async def list_tools() -> list[Tool]:
                     "font_name": {"type": "string", "description": "字体名称（可选）"},
                     "font_size": {"type": "integer", "description": "字号（可选）"},
                     "bold": {"type": "boolean", "description": "是否粗体"},
-                    "italic": {"type": "boolean", "description": "是否斜体"}
+                    "italic": {"type": "boolean", "description": "是否斜体"},
+                    "color": {"type": "string", "description": "文字颜色，十六进制RGB（可选）"},
+                    "highlight": {"type": "string", "description": "背景色（高亮），十六进制RGB（可选）"},
+                    "first_line_indent": {"type": "number", "description": "首行缩进，单位厘米（可选）"},
+                    "left_indent": {"type": "number", "description": "左缩进，单位厘米（可选）"},
+                    "right_indent": {"type": "number", "description": "右缩进，单位厘米（可选）"},
+                    "alignment": {"type": "string", "description": "对齐方式：left/center/right/justify（可选）"}
                 },
                 "required": ["filename", "text"]
             }
@@ -130,7 +141,12 @@ async def list_tools() -> list[Tool]:
                                 "font_size": {"type": "integer", "description": "字号（可选）"},
                                 "bold": {"type": "boolean", "description": "是否粗体"},
                                 "italic": {"type": "boolean", "description": "是否斜体"},
-                                "color": {"type": "string", "description": "文字颜色（可选）"}
+                                "color": {"type": "string", "description": "文字颜色，十六进制RGB（可选）"},
+                                "highlight": {"type": "string", "description": "背景色（高亮），十六进制RGB（可选）"},
+                                "first_line_indent": {"type": "number", "description": "首行缩进，单位厘米（可选）"},
+                                "left_indent": {"type": "number", "description": "左缩进，单位厘米（可选）"},
+                                "right_indent": {"type": "number", "description": "右缩进，单位厘米（可选）"},
+                                "alignment": {"type": "string", "description": "对齐方式：left/center/right/justify（可选）"}
                             },
                             "required": ["text"]
                         }
@@ -165,7 +181,12 @@ async def list_tools() -> list[Tool]:
                     "font_size": {"type": "integer", "description": "字号（可选）"},
                     "bold": {"type": "boolean", "description": "是否粗体"},
                     "italic": {"type": "boolean", "description": "是否斜体"},
-                    "color": {"type": "string", "description": "文字颜色（可选）"}
+                    "color": {"type": "string", "description": "文字颜色，十六进制RGB（可选）"},
+                    "highlight": {"type": "string", "description": "背景色（高亮），十六进制RGB（可选）"},
+                    "first_line_indent": {"type": "number", "description": "首行缩进，单位厘米（可选）"},
+                    "left_indent": {"type": "number", "description": "左缩进，单位厘米（可选）"},
+                    "right_indent": {"type": "number", "description": "右缩进，单位厘米（可选）"},
+                    "alignment": {"type": "string", "description": "对齐方式：left/center/right/justify（可选）"}
                 },
                 "required": ["filename", "text", "position"]
             }
@@ -198,7 +219,12 @@ async def list_tools() -> list[Tool]:
                     "font_size": {"type": "integer", "description": "字号（可选）"},
                     "bold": {"type": "boolean", "description": "是否粗体"},
                     "italic": {"type": "boolean", "description": "是否斜体"},
-                    "color": {"type": "string", "description": "文字颜色（可选）"}
+                    "color": {"type": "string", "description": "文字颜色，十六进制RGB（可选）"},
+                    "highlight": {"type": "string", "description": "背景色（高亮），十六进制RGB（可选）"},
+                    "first_line_indent": {"type": "number", "description": "首行缩进，单位厘米（可选）"},
+                    "left_indent": {"type": "number", "description": "左缩进，单位厘米（可选）"},
+                    "right_indent": {"type": "number", "description": "右缩进，单位厘米（可选）"},
+                    "alignment": {"type": "string", "description": "对齐方式：left/center/right/justify（可选）"}
                 },
                 "required": ["filename", "start_index", "end_index", "new_text"]
             }
@@ -255,7 +281,14 @@ async def list_tools() -> list[Tool]:
                     "table_index": {"type": "integer", "description": "表格索引"},
                     "row_index": {"type": "integer", "description": "行索引"},
                     "col_index": {"type": "integer", "description": "列索引"},
-                    "text": {"type": "string", "description": "单元格文本"}
+                    "text": {"type": "string", "description": "单元格文本"},
+                    "font_name": {"type": "string", "description": "字体名称（可选）"},
+                    "font_size": {"type": "integer", "description": "字号（可选）"},
+                    "bold": {"type": "boolean", "description": "是否粗体"},
+                    "italic": {"type": "boolean", "description": "是否斜体"},
+                    "color": {"type": "string", "description": "文字颜色，十六进制RGB（可选）"},
+                    "highlight": {"type": "string", "description": "背景色（高亮），十六进制RGB（可选）"},
+                    "alignment": {"type": "string", "description": "对齐方式：left/center/right/justify（可选）"}
                 },
                 "required": ["filename", "table_index", "row_index", "col_index", "text"]
             }
@@ -486,7 +519,13 @@ async def list_tools() -> list[Tool]:
                 "type": "object",
                 "properties": {
                     "filename": {"type": "string", "description": "文档路径"},
-                    "items": {"type": "array", "items": {"type": "string"}, "description": "列表项内容"}
+                    "items": {"type": "array", "items": {"type": "string"}, "description": "列表项内容"},
+                    "font_name": {"type": "string", "description": "字体名称（可选）"},
+                    "font_size": {"type": "integer", "description": "字号（可选）"},
+                    "bold": {"type": "boolean", "description": "是否粗体"},
+                    "italic": {"type": "boolean", "description": "是否斜体"},
+                    "color": {"type": "string", "description": "文字颜色，十六进制RGB（可选）"},
+                    "highlight": {"type": "string", "description": "背景色（高亮），十六进制RGB（可选）"}
                 },
                 "required": ["filename", "items"]
             }
@@ -498,7 +537,13 @@ async def list_tools() -> list[Tool]:
                 "type": "object",
                 "properties": {
                     "filename": {"type": "string", "description": "文档路径"},
-                    "items": {"type": "array", "items": {"type": "string"}, "description": "列表项内容"}
+                    "items": {"type": "array", "items": {"type": "string"}, "description": "列表项内容"},
+                    "font_name": {"type": "string", "description": "字体名称（可选）"},
+                    "font_size": {"type": "integer", "description": "字号（可选）"},
+                    "bold": {"type": "boolean", "description": "是否粗体"},
+                    "italic": {"type": "boolean", "description": "是否斜体"},
+                    "color": {"type": "string", "description": "文字颜色，十六进制RGB（可选）"},
+                    "highlight": {"type": "string", "description": "背景色（高亮），十六进制RGB（可选）"}
                 },
                 "required": ["filename", "items"]
             }
