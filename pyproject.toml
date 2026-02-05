@@ -1,0 +1,56 @@
+[project]
+name = "doc-mcp-server"
+version = "1.0.0"
+description = "功能强大的 Word 文档编辑 MCP 服务器，支持 Claude Desktop、Cline、Continue.dev 等 AI 编程工具"
+authors = [
+    {name = "doc-mcp-server contributors"}
+]
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.10"
+keywords = ["mcp", "word", "docx", "document", "claude", "ai", "automation"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Office/Business :: Office Suites",
+]
+dependencies = [
+    "mcp>=0.9.0",
+    "python-docx>=1.1.0",
+    "Pillow>=10.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/yourusername/doc-mcp-server"
+Repository = "https://github.com/yourusername/doc-mcp-server"
+Issues = "https://github.com/yourusername/doc-mcp-server/issues"
+Changelog = "https://github.com/yourusername/doc-mcp-server/blob/main/CHANGELOG.md"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+    "black>=23.0.0",
+    "ruff>=0.1.0",
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.black]
+line-length = 100
+target-version = ['py310']
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[project.scripts]
+doc-mcp-server = "src.server:main"

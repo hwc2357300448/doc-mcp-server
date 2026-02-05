@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "doc-mcp-server": {
+      "command": "D:\\workspace\\hwc-code\\doc-mcp-server\\start_mcp.bat",
+      "args": [],
+      "description": "通用Word文档编辑MCP服务，提供完整的Word文档操作能力",
+      "disabled": false
+    }
+  }
+}
