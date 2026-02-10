@@ -257,6 +257,110 @@ async def set_table_cell_content(
 
 
 @handle_docx_errors
+async def batch_set_table_cells(
+    filename: str,
+    table_index: int,
+    cells: List[Dict[str, Any]]
+) -> Dict[str, Any]:
+    """
+    批量设置表格单元格内容
+
+    参数:
+        filename: 文档路径
+        table_index: 表格索引（从0开始）
+        cells: 单元格列表，每个单元格包含：
+            - row_index: 行索引
+            - col_index: 列索引
+            - text: 文本内容
+            - font_name: 字体名称（可选）
+            - font_size: 字号（可选）
+            - bold: 是否粗体（可选）
+            - italic: 是否斜体（可选）
+            - color: 文字颜色（可选）
+            - highlight: 背景色（可选）
+            - alignment: 对齐方式（可选）
+    """
+    abs_path = validate_file_path(filename)
+    doc = doc_manager.get_or_open(abs_path)
+
+    if table_index < 0 or table_index >= len(doc.tables):
+        raise ValueError(f"表格索引超出范围: {table_index}，文档共有{len(doc.tables)}个表格")
+
+    table = doc.tables[table_index]
+    processed_count = 0
+
+    for cell_data in cells:
+        row_index = cell_data.get('row_index')
+        col_index = cell_data.get('col_index')
+        text = cell_data.get('text', '')
+
+        if row_index is None or col_index is None:
+            continue
+
+        if row_index < 0 or row_index >= len(table.rows):
+            continue
+
+        if col_index < 0 or col_index >= len(table.columns):
+            continue
+
+        cell = table.rows[row_index].cells[col_index]
+        cell.text = text
+
+        # 设置字体格式
+        font_name = cell_data.get('font_name')
+        font_size = cell_data.get('font_size')
+        bold = cell_data.get('bold')
+        italic = cell_data.get('italic')
+        color = cell_data.get('color')
+        highlight = cell_data.get('highlight')
+
+        if any([font_name, font_size, bold, italic, color, highlight]):
+            for paragraph in cell.paragraphs:
+                for run in paragraph.runs:
+                    if font_name:
+                        run.font.name = font_name
+                    if font_size:
+                        run.font.size = Pt(font_size)
+                    if bold is not None:
+                        run.font.bold = bold
+                    if italic is not None:
+                        run.font.italic = italic
+                    if color:
+                        run.font.color.rgb = RGBColor(
+                            int(color[0:2], 16),
+                            int(color[2:4], 16),
+                            int(color[4:6], 16)
+                        )
+                    if highlight:
+                        shd = OxmlElement('w:shd')
+                        shd.set(qn('w:fill'), highlight)
+                        run._element.get_or_add_rPr().append(shd)
+
+        # 设置段落对齐方式
+        alignment = cell_data.get('alignment')
+        if alignment:
+            alignment_map = {
+                'left': WD_ALIGN_PARAGRAPH.LEFT,
+                'center': WD_ALIGN_PARAGRAPH.CENTER,
+                'right': WD_ALIGN_PARAGRAPH.RIGHT,
+                'justify': WD_ALIGN_PARAGRAPH.JUSTIFY
+            }
+            if alignment.lower() in alignment_map:
+                for paragraph in cell.paragraphs:
+                    paragraph.alignment = alignment_map[alignment.lower()]
+
+        processed_count += 1
+
+    doc_manager.save(abs_path, doc)
+
+    return {
+        "success": True,
+        "message": f"批量设置完成，共处理{processed_count}个单元格",
+        "processed_count": processed_count
+    }
+
+
+@handle_docx_errors
 async def format_table(
     filename: str,
     table_index: int,

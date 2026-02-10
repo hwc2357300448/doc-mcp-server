@@ -312,6 +312,38 @@ async def list_tools() -> list[Tool]:
             }
         ),
         Tool(
+            name="batch_set_table_cells",
+            description="批量设置表格单元格内容",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "filename": {"type": "string", "description": "文档路径"},
+                    "table_index": {"type": "integer", "description": "表格索引"},
+                    "cells": {
+                        "type": "array",
+                        "description": "单元格列表",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "row_index": {"type": "integer", "description": "行索引"},
+                                "col_index": {"type": "integer", "description": "列索引"},
+                                "text": {"type": "string", "description": "单元格文本"},
+                                "font_name": {"type": "string", "description": "字体名称（可选）"},
+                                "font_size": {"type": "integer", "description": "字号（可选）"},
+                                "bold": {"type": "boolean", "description": "是否粗体（可选）"},
+                                "italic": {"type": "boolean", "description": "是否斜体（可选）"},
+                                "color": {"type": "string", "description": "文字颜色（可选）"},
+                                "highlight": {"type": "string", "description": "背景色（可选）"},
+                                "alignment": {"type": "string", "description": "对齐方式（可选）"}
+                            },
+                            "required": ["row_index", "col_index", "text"]
+                        }
+                    }
+                },
+                "required": ["filename", "table_index", "cells"]
+            }
+        ),
+        Tool(
             name="format_table",
             description="格式化表格",
             inputSchema={
@@ -828,6 +860,8 @@ async def call_tool(name: str, arguments: dict) -> list[TextContent]:
             result = await table_ops.insert_table(**arguments)
         elif name == "set_table_cell_content":
             result = await table_ops.set_table_cell_content(**arguments)
+        elif name == "batch_set_table_cells":
+            result = await table_ops.batch_set_table_cells(**arguments)
         elif name == "format_table":
             result = await table_ops.format_table(**arguments)
         # 样式格式
