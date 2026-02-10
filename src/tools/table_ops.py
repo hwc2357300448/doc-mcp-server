@@ -96,20 +96,18 @@ async def insert_table(
         raise ValueError(f"行数和列数必须大于0，当前值: rows={rows}, cols={cols}")
 
     # 在指定索引之后插入表格
-    # 策略：在 position+1 位置插入一个空段落，然后在该段落之前插入表格
-    if position + 1 >= len(doc.paragraphs):
-        # 如果 position 是最后一个段落，则追加到末尾
-        table = doc.add_table(rows=rows, cols=cols)
-    else:
-        # 在 position+1 的位置之前插入表格
-        # python-docx 的表格插入需要通过段落来定位
+    # 策略：先创建表格，然后移动到正确位置
+    table = doc.add_table(rows=rows, cols=cols)
+
+    # 如果不是追加到末尾，需要移动表格位置
+    if position + 1 < len(doc.paragraphs):
+        # 获取表格元素和目标段落元素
+        table_element = table._element
         target_para = doc.paragraphs[position + 1]
-        # 在目标段落之前插入表格
-        table = target_para._element.addprevious(
-            doc.add_table(rows=rows, cols=cols)._element
-        )
-        # 重新获取表格对象
-        table = doc.tables[-1]
+        target_element = target_para._element
+
+        # 将表格元素移动到目标段落之前
+        target_element.addprevious(table_element)
 
     # 尝试设置表格样式
     try:
