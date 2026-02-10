@@ -96,24 +96,60 @@ async def insert_table(
         raise ValueError(f"行数和列数必须大于0，当前值: rows={rows}, cols={cols}")
 
     # 在指定索引之后插入表格
-    # 策略：先创建表格，然后移动到正确位置
-    table = doc.add_table(rows=rows, cols=cols)
+    # 策略：直接在指定位置创建表格元素
+    from docx.oxml import parse_xml
+    from docx.table import Table
 
-    # 如果不是追加到末尾，需要移动表格位置
-    if position + 1 < len(doc.paragraphs):
-        # 获取表格元素和目标段落元素
-        table_element = table._element
+    # 创建表格 XML 元素
+    tbl_xml = f'''<w:tbl xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
+        <w:tblPr>
+            <w:tblStyle w:val="TableGrid"/>
+            <w:tblW w:w="5000" w:type="pct"/>
+        </w:tblPr>
+        <w:tblGrid>
+            {''.join([f'<w:gridCol w:w="2000"/>' for _ in range(cols)])}
+        </w:tblGrid>
+        {''.join([f'<w:tr>{" ".join([f"<w:tc><w:tcPr><w:tcW w:w=\"2000\" w:type=\"dxa\"/></w:tcPr><w:p/></w:tc>" for _ in range(cols)])}</w:tr>' for _ in range(rows)])}
+    </w:tbl>'''
+
+    tbl_element = parse_xml(tbl_xml)
+
+    # 在指定位置插入表格元素
+    if position + 1 >= len(doc.paragraphs):
+        # 追加到末尾
+        doc.element.body.append(tbl_element)
+    else:
+        # 插入到 position+1 段落之前
+        target_para = doc.paragraphs[position + 1]
+        target_para._element.addprevious(tbl_element)
+
+    # 保存并重新加载文档
+    doc_manager.save(abs_path, doc)
+    doc = doc_manager.get_or_open(abs_path)
+
+    # 计算插入的表格索引
+    # 通过遍历文档元素，找到目标段落之前有多少个表格
+    if position + 1 >= len(doc.paragraphs):
+        # 追加到末尾
+        table_index = len(doc.tables) - 1
+        table = doc.tables[table_index]
+    else:
+        # 插入到中间
         target_para = doc.paragraphs[position + 1]
         target_element = target_para._element
 
-        # 将表格元素移动到目标段落之前
-        target_element.addprevious(table_element)
+        # 计算目标段落之前有多少个表格
+        table_index = 0
+        for element in doc.element.body:
+            if element == target_element:
+                # 找到目标段落，表格就在它前面
+                # 索引就是当前计数减1（因为表格在段落前面）
+                table_index = table_index - 1 if table_index > 0 else 0
+                break
+            if element.tag.endswith('}tbl'):
+                table_index += 1
 
-    # 尝试设置表格样式
-    try:
-        table.style = 'Table Grid'
-    except KeyError:
-        pass
+        table = doc.tables[table_index]
 
     # 填充数据
     if data:
@@ -131,7 +167,7 @@ async def insert_table(
         "success": True,
         "message": f"表格已插入到位置{position}之后（{rows}行 x {cols}列）",
         "position": position,
-        "table_index": len(doc.tables) - 1,
+        "table_index": table_index,
         "rows": rows,
         "cols": cols
     }
