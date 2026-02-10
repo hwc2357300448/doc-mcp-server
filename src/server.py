@@ -272,6 +272,24 @@ async def list_tools() -> list[Tool]:
             }
         ),
         Tool(
+            name="insert_table",
+            description="在指定位置插入表格（在指定索引之后插入）",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "filename": {"type": "string", "description": "文档路径"},
+                    "position": {
+                        "type": "integer",
+                        "description": "插入位置索引（从0开始）。表格将插入到指定索引之后。例如：position=0表示插入到索引0之后"
+                    },
+                    "rows": {"type": "integer", "description": "行数"},
+                    "cols": {"type": "integer", "description": "列数"},
+                    "data": {"type": "array", "description": "表格数据（可选），二维列表"}
+                },
+                "required": ["filename", "position", "rows", "cols"]
+            }
+        ),
+        Tool(
             name="set_table_cell_content",
             description="设置表格单元格内容",
             inputSchema={
@@ -806,6 +824,8 @@ async def call_tool(name: str, arguments: dict) -> list[TextContent]:
         # 表格操作
         elif name == "add_table":
             result = await table_ops.add_table(**arguments)
+        elif name == "insert_table":
+            result = await table_ops.insert_table(**arguments)
         elif name == "set_table_cell_content":
             result = await table_ops.set_table_cell_content(**arguments)
         elif name == "format_table":

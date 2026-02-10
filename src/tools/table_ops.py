@@ -66,6 +66,80 @@ async def add_table(
 
 
 @handle_docx_errors
+async def insert_table(
+    filename: str,
+    position: int,
+    rows: int,
+    cols: int,
+    data: Optional[List[List[str]]] = None
+) -> Dict[str, Any]:
+    """
+    在指定位置插入表格（在指定索引之后插入）
+
+    参数:
+        filename: 文档路径
+        position: 插入位置索引（从0开始）
+                 表格将插入到指定索引之后
+                 例如：position=0 表示插入到索引0之后
+                      position=5 表示插入到索引5之后
+        rows: 行数
+        cols: 列数
+        data: 表格数据（可选），二维列表
+    """
+    abs_path = validate_file_path(filename)
+    doc = doc_manager.get_or_open(abs_path)
+
+    if position < 0 or position >= len(doc.paragraphs):
+        raise ValueError(f"插入位置超出范围: {position}，有效范围: 0-{len(doc.paragraphs)-1}")
+
+    if rows <= 0 or cols <= 0:
+        raise ValueError(f"行数和列数必须大于0，当前值: rows={rows}, cols={cols}")
+
+    # 在指定索引之后插入表格
+    # 策略：在 position+1 位置插入一个空段落，然后在该段落之前插入表格
+    if position + 1 >= len(doc.paragraphs):
+        # 如果 position 是最后一个段落，则追加到末尾
+        table = doc.add_table(rows=rows, cols=cols)
+    else:
+        # 在 position+1 的位置之前插入表格
+        # python-docx 的表格插入需要通过段落来定位
+        target_para = doc.paragraphs[position + 1]
+        # 在目标段落之前插入表格
+        table = target_para._element.addprevious(
+            doc.add_table(rows=rows, cols=cols)._element
+        )
+        # 重新获取表格对象
+        table = doc.tables[-1]
+
+    # 尝试设置表格样式
+    try:
+        table.style = 'Table Grid'
+    except KeyError:
+        pass
+
+    # 填充数据
+    if data:
+        for i, row_data in enumerate(data):
+            if i >= rows:
+                break
+            for j, cell_data in enumerate(row_data):
+                if j >= cols:
+                    break
+                table.rows[i].cells[j].text = str(cell_data)
+
+    doc_manager.save(abs_path, doc)
+
+    return {
+        "success": True,
+        "message": f"表格已插入到位置{position}之后（{rows}行 x {cols}列）",
+        "position": position,
+        "table_index": len(doc.tables) - 1,
+        "rows": rows,
+        "cols": cols
+    }
+
+
+@handle_docx_errors
 async def set_table_cell_content(
     filename: str,
     table_index: int,
